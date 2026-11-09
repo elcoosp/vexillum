@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  rust:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - name: Type-check worker for wasm32
+        run: cargo check -p vexillum-worker --target wasm32-unknown-unknown
+      - name: Test workspace
+        run: cargo test --workspace
+
+  node:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 12
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile --allow-build=esbuild --allow-build=@parcel/watcher
+      - name: Typecheck all packages
+        run: pnpm -r --if-present typecheck
+      - name: Compile templates (React SSR + Tailwind + Rust emit)
+        run: pnpm --filter @vexillum/compiler compile
+      - name: Verify template markers
+        run: pnpm --filter @vexillum/compiler verify
+      - name: Test all packages
+        run: pnpm -r --if-present test
+      - name: Build all packages
+        run: pnpm -r --if-present build
+      - name: Visual regression (0.1% gate)
+        run: node_modules/.bin/tsx scripts/visual-regression.ts
+
+  rust-wasm:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: wasm32-unknown-unknown
+      - uses: Swatinem/rust-cache@v2
+      - name: Edge worker wasm check
+        run: cargo check -p vexillum-worker --target wasm32-unknown-unknown
