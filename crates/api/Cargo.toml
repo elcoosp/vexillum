@@ -1,0 +1,31 @@
+[package]
+name = "vexillum-api"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+vexillum-core = { workspace = true }
+vexillum-templates = { workspace = true }
+vexillum-render = { workspace = true }
+vexillum-theme = { workspace = true }
+vexillum-icons = { workspace = true }
+vexillum-data = { workspace = true }
+vexillum-cache = { workspace = true }
+vexillum-auth = { workspace = true }
+vexillum-billing = { workspace = true }
+axum = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+sha2 = { workspace = true }
+parking_lot = { workspace = true }
+reqwest = { workspace = true }
+tower-http = { workspace = true }
+tracing = { workspace = true }
+
+[dev-dependencies]
+tower = { workspace = true, features = ["util"] }
+tempfile = { workspace = true }
+wiremock = { workspace = true }
+flate2 = "1"
