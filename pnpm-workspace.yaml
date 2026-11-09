@@ -1,0 +1,13 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+# Supply-chain guard: never resolve package versions younger than 48h so the
+# committed lockfile always passes minimumReleaseAge policy checks.
+minimumReleaseAge: 2880
+allowBuilds:
+  '@parcel/watcher': true
+  esbuild: true
+permissions:
+  '@tanstack/react-router':
+    build: false
+    skills: false

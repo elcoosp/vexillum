@@ -1,0 +1,17 @@
+{
+  "name": "vexillum",
+  "private": true,
+  "packageManager": "pnpm@12.15.0",
+  "scripts": {
+    "build": "turbo run build",
+    "test": "turbo run test",
+    "compile": "pnpm --filter @vexillum/compiler compile",
+    "verify-templates": "pnpm --filter @vexillum/compiler verify"
+  },
+  "devDependencies": {
+    "turbo": "^2.11.10",
+    "pngjs": "^7.0.0",
+    "pixelmatch": "^8.0.0",
+    "tsx": "^4.23.15"
+  }
+}
