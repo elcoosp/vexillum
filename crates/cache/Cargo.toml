@@ -1,0 +1,21 @@
+[package]
+name = "vexillum-cache"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+
+[dependencies]
+vexillum-core = { workspace = true }
+moka = { workspace = true }
+redb = { workspace = true }
+sha2 = { workspace = true }
+hex = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+tokio = { workspace = true }
+
+[dev-dependencies]
+tempfile = { workspace = true }
+vexillum-render = { workspace = true }
+tokio = { workspace = true, features = ["macros", "rt-multi-thread"] }
