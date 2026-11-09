@@ -1,0 +1,346 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --color-background: #ffffff;
+  --color-foreground: #18181b;
+  --color-muted: #f4f4f5;
+  --color-muted-foreground: #71717a;
+  --color-border: #e4e4e7;
+  --color-primary: #18181b;
+  --color-primary-foreground: #fafafa;
+  --color-accent: #2563eb;
+  --color-accent-foreground: #ffffff;
+  --color-success: #059669;
+  --color-warning: #d97706;
+  --color-danger: #e11d48;
+}
+
+@layer base {
+  body {
+    background: var(--color-background);
+    color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /*
+   * Micro-interaction timing tokens (interior.dev school): one expressive
+   * spring for entrances, one snap for confirmation pops, fast presses that
+   * never delay the interaction, and every effect gated behind
+   * prefers-reduced-motion. Transforms/opacity only — nothing here can
+   * trigger layout or scrollbars.
+   */
+  :root {
+    --vx-spring: cubic-bezier(0.22, 1, 0.36, 1);
+    --vx-snap: cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  /* Press: buttons and chips compress a touch while held — feedback without
+     a delay, released by the same spring. */
+  .vx-press {
+    transition:
+      transform 140ms var(--vx-spring),
+      box-shadow 180ms var(--vx-spring),
+      background-color 140ms ease,
+      border-color 140ms ease,
+      color 140ms ease,
+      opacity 140ms ease;
+  }
+  .vx-press:active {
+    transform: scale(0.97);
+  }
+
+  /* Lift: cards float 1px with a soft shadow on hover. Pure transform, so
+     the grid never reflows underneath the pointer. */
+  .vx-lift {
+    transition:
+      transform 200ms var(--vx-spring),
+      box-shadow 200ms var(--vx-spring),
+      border-color 200ms ease;
+    will-change: transform;
+  }
+  .vx-lift:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 1px 2px rgb(0 0 0 / 0.04),
+      0 8px 24px -12px rgb(0 0 0 / 0.18);
+  }
+
+  /* Enter: fade-up for route-level and group-level content appearing. */
+  @keyframes vx-fade-up {
+    from {
+      opacity: 0;
+      transform: translateY(6px);
+    }
+    to {
+      opacity: 1;
+      transform: none;
+    }
+  }
+  .vx-enter {
+    animation: vx-fade-up 420ms var(--vx-spring) both;
+  }
+  .vx-enter-stagger > * {
+    animation: vx-fade-up 420ms var(--vx-spring) both;
+  }
+  .vx-enter-stagger > *:nth-child(1) { animation-delay: 0ms; }
+  .vx-enter-stagger > *:nth-child(2) { animation-delay: 40ms; }
+  .vx-enter-stagger > *:nth-child(3) { animation-delay: 80ms; }
+  .vx-enter-stagger > *:nth-child(4) { animation-delay: 120ms; }
+  .vx-enter-stagger > *:nth-child(5) { animation-delay: 160ms; }
+  .vx-enter-stagger > *:nth-child(6) { animation-delay: 200ms; }
+  .vx-enter-stagger > *:nth-child(n + 7) { animation-delay: 240ms; }
+
+  /* Pop: confirmation burst (copy success, toggles flipping on). */
+  @keyframes vx-pop {
+    0% {
+      transform: scale(0.5);
+      opacity: 0.4;
+    }
+    60% {
+      transform: scale(1.18);
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  .vx-pop {
+    animation: vx-pop 340ms var(--vx-snap) both;
+  }
+
+  /* Skeleton shimmer: a light sweep over muted placeholders instead of a
+     bare pulse — reads as "loading this exact shape" rather than blinking. */
+  @keyframes vx-shimmer {
+    from {
+      transform: translateX(-100%);
+    }
+    to {
+      transform: translateX(100%);
+    }
+  }
+  .vx-skeleton {
+    position: relative;
+    overflow: hidden;
+    background: var(--color-muted);
+  }
+  .vx-skeleton::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(255 255 255 / 0.65), transparent);
+    animation: vx-shimmer 1.6s ease-in-out infinite;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vx-press,
+    .vx-lift {
+      transition-duration: 1ms;
+    }
+    .vx-press:active,
+    .vx-lift:hover {
+      transform: none;
+    }
+    .vx-enter,
+    .vx-enter-stagger > *,
+    .vx-pop {
+      animation: none;
+    }
+    .vx-skeleton::after {
+      animation: none;
+    }
+  }
+
+  /*
+   * Beautiful scrollbars — everywhere, by inheritance. scrollbar-width and
+   * scrollbar-color are inherited properties, so one rule on the root styles
+   * the page scroller AND every nested overflow pane that doesn't override
+   * it. The webkit rules give Chromium/Safari the same geometry: a hairline
+   * thumb with a transparent border (the "floating" pill look), a trackless
+   * gutter that never paints a strip, and an accent tint on hover. Dark
+   * surfaces (pre, .vx-scroll) opt into the white-on-dark variant below.
+   */
+  :root {
+    scrollbar-width: thin;
+    scrollbar-color: rgb(161 161 170 / 0.55) transparent;
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track,
+  ::-webkit-scrollbar-corner {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: rgb(161 161 170 / 0.55);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgb(113 113 122 / 0.75);
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+  /* Dark-surface scroll containers (code blocks): white thumb at low alpha so
+     the bar reads on zinc-950 without ever painting a light strip. */
+  pre,
+  .vx-scroll {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+  }
+  pre::-webkit-scrollbar,
+  .vx-scroll::-webkit-scrollbar {
+    height: 8px;
+    width: 8px;
+  }
+  pre::-webkit-scrollbar-thumb,
+  .vx-scroll::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.22);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px;
+  }
+  pre::-webkit-scrollbar-thumb:hover,
+  .vx-scroll::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.38);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+  }
+
+  /* Light-surface scrollers (tables, panes) get the same geometry in gray. */
+  .vx-scroll-light {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(0, 0, 0, 0.22) transparent;
+  }
+  .vx-scroll-light::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.22);
+    border: 2px solid transparent;
+    background-clip: padding-box;
+    border-radius: 9999px;
+  }
+
+  /* ------------------------------------------------ landing-page motion.
+     All transform/opacity — zero layout work — and every animation is
+     gated behind prefers-reduced-motion at the bottom of the file. */
+
+  /* Aurora: the hero's slow-drifting gradient blobs (blur does the rest). */
+  @keyframes vx-drift {
+    0% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+    33% {
+      transform: translate3d(4%, -6%, 0) scale(1.08);
+    }
+    66% {
+      transform: translate3d(-5%, 4%, 0) scale(0.94);
+    }
+    100% {
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+  .vx-aurora-blob {
+    animation: vx-drift 18s ease-in-out infinite;
+  }
+
+  /* Marquee: the infinite badge ribbon — two copies of one row, the wrapper
+     translating -50% on a loop. Pauses on hover so badges stay clickable. */
+  @keyframes vx-marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  .vx-marquee-track {
+    animation: vx-marquee 42s linear infinite;
+  }
+  .vx-marquee-track.reverse {
+    animation-direction: reverse;
+  }
+  .vx-marquee:hover .vx-marquee-track {
+    animation-play-state: paused;
+  }
+  /* Edge fade so badges melt into the background instead of clipping hard. */
+  .vx-marquee-mask {
+    mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 8%, black 92%, transparent);
+  }
+
+  /* Float: decorative badges drifting in the 404 page background. */
+  @keyframes vx-float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(var(--vx-tilt, 0deg));
+    }
+    50% {
+      transform: translateY(-10px) rotate(var(--vx-tilt, 0deg));
+    }
+  }
+  .vx-float {
+    animation: vx-float 7s ease-in-out infinite;
+  }
+
+  /* Sheen: a light sweep across primary CTAs on hover. */
+  .vx-sheen {
+    position: relative;
+    overflow: hidden;
+  }
+  .vx-sheen::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    transform: translateX(-120%) skewX(-18deg);
+    background: linear-gradient(105deg, transparent, rgb(255 255 255 / 0.28), transparent);
+    transition: transform 700ms var(--vx-spring);
+    pointer-events: none;
+  }
+  .vx-sheen:hover::after {
+    transform: translateX(120%) skewX(-18deg);
+  }
+
+  /* Scroll reveal (IntersectionObserver adds .is-visible once). */
+  .vx-reveal {
+    opacity: 0;
+    transform: translateY(14px);
+    transition:
+      opacity 600ms var(--vx-spring),
+      transform 600ms var(--vx-spring);
+  }
+  .vx-reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .vx-press,
+    .vx-lift,
+    .vx-reveal {
+      transition-duration: 1ms;
+    }
+    .vx-reveal {
+      opacity: 1;
+      transform: none;
+    }
+    .vx-press:active,
+    .vx-lift:hover {
+      transform: none;
+    }
+    .vx-enter,
+    .vx-enter-stagger > *,
+    .vx-pop,
+    .vx-aurora-blob,
+    .vx-marquee-track,
+    .vx-float {
+      animation: none;
+    }
+    .vx-skeleton::after {
+      animation: none;
+    }
+  }
+}
