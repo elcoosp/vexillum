@@ -1,0 +1,17 @@
+node_modules/
+target/
+dist/
+.turbo/
+*.log
+.DS_Store
+coverage/
+*.redb
+crates/icons/assets/icondata.json
+crates/icons/assets/brands-index.json
+apps/web/src/lib/icon-data/
+apps/web/src/lib/icon-paths-full.ts
+apps/web/src/lib/icon-paths.ts
+apps/web/src/lib/slugs.ts
+apps/web/src/lib/icon-catalog-full.ts
+ship.toml
+.github/pr-body.md
