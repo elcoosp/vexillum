@@ -1,0 +1,9 @@
+{
+  "input": "badge-collections.html",
+  "collections": 32,
+  "variants": 512,
+  "withIcon": 160,
+  "withExtra": 46,
+  "animated": 10,
+  "keyframes": 27
+}
