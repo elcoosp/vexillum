@@ -1,0 +1,16 @@
+services:
+  origin:
+    build:
+      context: ..
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - vexillum-data:/data
+    environment:
+      VX_GITHUB_TOKENS: ${VX_GITHUB_TOKENS:-}
+      RUST_LOG: info
+    restart: unless-stopped
+
+volumes:
+  vexillum-data:
