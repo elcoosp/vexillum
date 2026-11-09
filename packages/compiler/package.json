@@ -1,0 +1,29 @@
+{
+  "name": "@vexillum/compiler",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "bundle": "node scripts/bundle.mjs",
+    "compile": "node scripts/bundle.mjs && node dist/build.mjs all && node dist/verify.mjs",
+    "verify": "node dist/verify.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@vexillum/badges": "workspace:*",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "esbuild": "^0.28.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/cli": "^4.3.3",
+    "@types/node": "^26.6.5",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "tailwindcss": "^4.3.3",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2",
+    "vitest": "^5.0.5"
+  }
+}
